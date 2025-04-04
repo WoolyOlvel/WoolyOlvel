@@ -1,24 +1,27 @@
-name: Generate Snake Animation
+name: Snake Animation
 
 on:
-  schedule:
-    - cron: "0 0 * * *"  # Esto ejecuta el workflow automáticamente todos los días a medianoche (UTC)
-  workflow_dispatch:  # Esto permite ejecutar el workflow manualmente
+  push:
+    branches:
+      - main
+  workflow_dispatch:
 
 jobs:
-  build:
+  update_snake_animation:
     runs-on: ubuntu-latest
-    steps:
-      - uses: Platane/snk@master
-        id: snake-gif
-        with:
-          github_user_name: WoolyOlvel
-          svg_out_path: dist/github-contribution-grid-snake.svg
 
-      - name: Commit and push if changed
-        run: |
-          git config --global user.name 'github-actions'
-          git config --global user.email 'github-actions@github.com'
-          git add -A
-          git commit -m "Update snake animation" || exit 0
-          git push
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Set up Git
+      run: |
+        git config --global user.name 'github-actions'
+        git config --global user.email 'github-actions@github.com'
+
+    - name: Generate Snake Animation
+      run: |
+        # Aquí iría el código para generar la animación de la serpiente
+        git add -A
+        git commit -m "Update snake animation" || exit 0
+        git push
