@@ -14,16 +14,27 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v2
 
+    - name: Verify repository content
+      run: |
+        echo "Repository contents:"
+        ls -la
+
     - name: Set up Git
       run: |
         git config --global user.name 'github-actions'
         git config --global user.email 'github-actions@github.com'
+        git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
 
     - name: Generate Snake Animation
       uses: Platane/snk/svg-only@v3
       with:
-        github_user_name: ${{ github.repository_owner }}
+        github_user_name: WoolyOlvel
         outputs: dist/snake.svg?palette=github-dark
+
+    - name: Ensure output branch exists
+      run: |
+        git fetch origin
+        git checkout -b output origin/output || git checkout --orphan output
 
     - name: Push generated snake.svg to the output branch
       uses: crazy-max/ghaction-github-pages@v3.1.0
